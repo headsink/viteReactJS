@@ -28,7 +28,8 @@ function App() {
 
   if (loading) return "LOADING....";
 
-  const gotoNextPage = () => {}
+  const gotoNextPage = () => { setCurrPageURL(nextPageURL)}
+  const gotoPrevPage = () => { setPrevPageURL(prevPageURL)}
 
   return (
     <div>
