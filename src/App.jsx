@@ -13,15 +13,22 @@ function App() {
 
   useEffect(() => {
     setLoading(true); // if Internet is slow it will be showing "LOADING..."
-    axios.get(currPageURL).then(res => {
+    let cancel;
+    axios.get(currPageURL,{
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    }).then(res => {
       setLoading(false); // if this is deleted the page will be showing "LOADING..."
       setNextPageURL(res.data.next);
       setPrevPageURL(res.data.previous);
       setPokemon(res.data.results.map(p=>p.name));
     })
+
+    return () => cancel();
   }, [currPageURL]);
 
   if (loading) return "LOADING....";
+
+  const gotoNextPage = () => {}
 
   return (
     <div>
