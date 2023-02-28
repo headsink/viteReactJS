@@ -8,18 +8,20 @@ function App() {
   const [currPageURL, setCurrPageURL] = useState("https://pokeapi.co/api/v2/pokemon");
   const [nextPageURL, setNextPageURL] = useState();
   const [prevPageURL, setPrevPageURL] = useState();
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
+    setLoading(true); // if Internet is slow it will be showing "LOADING..."
     axios.get(currPageURL).then(res => {
+      setLoading(false); // if this is deleted the page will be showing "LOADING..."
       setNextPageURL(res.data.next);
       setPrevPageURL(res.data.previous);
       setPokemon(res.data.results.map(p=>p.name));
     })
   }, [currPageURL]);
-  
 
-
+  if (loading) return "LOADING....";
 
   return (
     <div>
