@@ -1,16 +1,22 @@
 import axios from "axios";
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import PokemonList from "./PokemonList";
 
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
+  const [currPageURL, setCurrPageURL] = useState("https://pokeapi.co/api/v2/pokemon");
+  const [nextPageURL, setNextPageURL] = useState();
+  const [prevPageURL, setPrevPageURL] = useState();
+
 
   useEffect(() => {
-    axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
-      setPokemon(res.data.results.map(p=>p.name))
+    axios.get(currPageURL).then(res => {
+      setNextPageURL(res.data.next);
+      setPrevPageURL(res.data.previous);
+      setPokemon(res.data.results.map(p=>p.name));
     })
-  }, [])
+  }, [currPageURL]);
   
 
 
