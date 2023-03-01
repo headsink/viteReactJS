@@ -4,8 +4,8 @@ export default function Pagination( gotoNextPage, gotoPrevPage) {
 
   return (
     <div>
-      <button onClick={gotoPrevPage}>Previous</button>
-      <button onClick={gotoNextPage}>Next</button>    
+      {gotoPrevPage && <button onClick={gotoPrevPage}>Previous</button>}
+      {gotoNextPage && <button onClick={gotoNextPage}>Next</button>}
     </div>
   )
 }

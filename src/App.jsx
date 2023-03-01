@@ -1,45 +1,49 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import PokemonList from "./PokemonList";
-
+import React, { useState, useEffect } from 'react';
+import PokemonList from './PokemonList'
+import axios from 'axios'
+import Pagination from './Pagination';
 
 function App() {
-  const [pokemon, setPokemon] = useState([]);
-  const [currPageURL, setCurrPageURL] = useState("https://pokeapi.co/api/v2/pokemon");
-  const [nextPageURL, setNextPageURL] = useState();
-  const [prevPageURL, setPrevPageURL] = useState();
-  const [loading, setLoading] = useState(true);
-
+  const [pokemon, setPokemon] = useState([])
+  const [currentPageUrl, setCurrentPageUrl] = useState("https://pokeapi.co/api/v2/pokemon")
+  const [nextPageUrl, setNextPageUrl] = useState()
+  const [prevPageUrl, setPrevPageUrl] = useState()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true); // if Internet is slow it will be showing "LOADING..."
-    let cancel;
-    axios.get(currPageURL,{
+    setLoading(true)
+    let cancel
+    axios.get(currentPageUrl, {
       cancelToken: new axios.CancelToken(c => cancel = c)
     }).then(res => {
-      setLoading(false); // if this is deleted the page will be showing "LOADING..."
-      setNextPageURL(res.data.next);
-      setPrevPageURL(res.data.previous);
-      setPokemon(res.data.results.map(p=>p.name));
+      setLoading(false)
+      setNextPageUrl(res.data.next)
+      setPrevPageUrl(res.data.previous)
+      setPokemon(res.data.results.map(p => p.name))
     })
 
-    return () => cancel();
-  }, [currPageURL]);
+    return () => cancel()
+  }, [currentPageUrl])
 
-  if (loading) return "LOADING....";
+  function gotoNextPage() {
+    setCurrentPageUrl(nextPageUrl)
+  }
 
-  const gotoNextPage = () => { setCurrPageURL(nextPageURL)}
-  const gotoPrevPage = () => { setPrevPageURL(prevPageURL)}
+  function gotoPrevPage() {
+    setCurrentPageUrl(prevPageUrl)
+  }
 
+  if (loading) return "Loading..."
+  
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <PokemonList pokemon={pokemon} />
-    </div>
-   
+    <>
+      <PokemonList pokemon={pokemon} />
+      <Pagination
+        gotoNextPage={nextPageUrl ? gotoNextPage : null}
+        gotoPrevPage={prevPageUrl ? gotoPrevPage : null}
+      />
+    </>
   );
 }
 
-export default App
+export default App;
